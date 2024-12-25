@@ -13,60 +13,18 @@ import {
   MonitorSmartphone,
   SearchCheck,
 } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import VanillaTilt from 'vanilla-tilt';
 
 import Container from '@/components/Container';
+import Projects from '@/components/Home/Projects';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Carousel,
-  type CarouselApi,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
 import { cn, scrollTo } from '@/lib/utils';
 
 const aboutStats = [
   { label: 'Years of experience', value: '5+' },
   { label: 'Technologies mastered', value: '40+' },
   { label: 'Companies worked with', value: '3+' },
-];
-
-const projects = [
-  {
-    title: 'Unqueue',
-    description: 'E-commerce platform for selling digital products',
-    image: '/assets/unqueue.webm',
-    href: 'https://unqueue.shop/',
-  },
-  {
-    title: 'InfiniteVPS',
-    description: 'High performance VPS hosting solution',
-    image: '/assets/infinitevps.webm',
-    href: '#',
-  },
-  {
-    title: 'TranslateBot',
-    description: 'Powerful Multilingual Translation Bot for Discord',
-    image: '/assets/translate_bot.webm',
-    href: 'https://translatebot.app/',
-  },
-  {
-    title: 'Wrona',
-    description: 'Robotics-focused technology company',
-    image: '/assets/wrona.jpeg',
-    href: 'https://www.wrona.com/',
-  },
-  {
-    title: 'This website',
-    description: 'My personal website',
-    image: '/assets/portfolio.webm',
-    href: 'https://github.com/wendoj/portfolio',
-  },
 ];
 
 const services = [
@@ -105,9 +63,6 @@ const services = [
 export default function Home() {
   const refScrollContainer = useRef(null);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
-  const [current, setCurrent] = useState<number>(0);
-  const [count, setCount] = useState<number>(0);
 
   // handle scroll
   useEffect(() => {
@@ -151,27 +106,16 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!carouselApi) return;
-
-    setCount(carouselApi.scrollSnapList().length);
-    setCurrent(carouselApi.selectedScrollSnap() + 1);
-
-    carouselApi.on('select', () => {
-      setCurrent(carouselApi.selectedScrollSnap() + 1);
-    });
-  }, [carouselApi]);
-
   // card hover effect
   useEffect(() => {
     const tilt: HTMLElement[] = Array.from(document.querySelectorAll('#tilt'));
     VanillaTilt.init(tilt, {
       speed: 300,
       glare: true,
-      'max-glare': 0.1,
+      'max-glare': 0.05,
       gyroscope: true,
-      perspective: 900,
-      scale: 0.9,
+      perspective: 1000,
+      scale: 0.95,
     });
   }, []);
 
@@ -319,85 +263,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Projects */}
-        <section id="projects" data-scroll-section>
-          {/* Gradient */}
-          <div className="relative isolate -z-10">
-            <div
-              className="absolute inset-x-0 -top-40 transform-gpu overflow-hidden blur-[100px] sm:-top-80 lg:-top-60"
-              aria-hidden="true"
-            >
-              <div
-                className="from-primary via-primary to-secondary relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr opacity-10 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-                style={{
-                  clipPath:
-                    'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-                }}
-              />
-            </div>
-          </div>
-          <div data-scroll data-scroll-speed=".4" className="my-64">
-            <span className="text-gradient clash-grotesk text-sm font-semibold tracking-tighter">
-              ✨ Projects
-            </span>
-            <h2 className="mt-3 text-4xl font-semibold tracking-tighter xl:text-6xl">
-              Streamlined digital experiences.
-            </h2>
-            <p className="text-muted-foreground mt-1.5 text-base tracking-tight xl:text-lg">
-              I&apos;ve worked on a variety of projects, from small websites to
-              large-scale web applications. Here are some of my favorites:
-            </p>
-
-            {/* Carousel */}
-            <div className="mt-14">
-              <Carousel setApi={setCarouselApi} className="w-full">
-                <CarouselContent>
-                  {projects.map((project) => (
-                    <CarouselItem key={project.title} className="md:basis-1/2">
-                      <Card id="tilt">
-                        <CardHeader className="p-0">
-                          <Link href={project.href} target="_blank" passHref>
-                            {project.image.endsWith('.webm') ? (
-                              <video
-                                src={project.image}
-                                autoPlay
-                                loop
-                                muted
-                                className="bg-primary aspect-video size-full rounded-t-md object-cover"
-                              />
-                            ) : (
-                              <Image
-                                src={project.image}
-                                alt={project.title}
-                                width={600}
-                                height={300}
-                                quality={100}
-                                className="bg-primary aspect-video size-full rounded-t-md object-cover"
-                              />
-                            )}
-                          </Link>
-                        </CardHeader>
-                        <CardContent className="bg-background/50 absolute bottom-0 w-full backdrop-blur">
-                          <CardTitle className="border-t border-white/5 p-4 text-base font-normal tracking-tighter">
-                            {project.description}
-                          </CardTitle>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
-              <div className="text-muted-foreground py-2 text-center text-sm">
-                <span className="font-semibold">
-                  {current} / {count}
-                </span>{' '}
-                projects
-              </div>
-            </div>
-          </div>
-        </section>
+        <Projects />
 
         {/* Services */}
         <section id="services" data-scroll-section>
